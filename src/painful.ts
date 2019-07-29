@@ -38,9 +38,12 @@ export class PainfulNotation extends Notation {
     if (value.lt(0)) {
       return `-${this.formatAnyNumber(value.negate())}`;
     }
+    if (value.eq(0)) {
+      return "0";
+    }
     let level = 0;
-    if (value.lt(1)) {
-      value = Decimal.pow(1e5, value.toNumber());
+    while (value.lt(1)) {
+      value = new Decimal(1e5 * value.toNumber());
       level -= 1;
     }
     while (value.gte(1e5)) {
@@ -49,23 +52,18 @@ export class PainfulNotation extends Notation {
     }
     let numberValue = value.toNumber();
     let a = [];
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 2; i++) {
       a.push(Math.floor(numberValue + 1e-9));
-      numberValue = Math.pow(1e5, numberValue - Math.floor(numberValue + 1e-9));
+      numberValue = 1e5 * (numberValue - Math.floor(numberValue + 1e-9));
     }
-    if (a[1] >= 10) {
-      a.pop();
-    }
-    while (a.length > 1 && a[a.length - 1] === 1) {
+    if (a[1] === 0) {
       a.pop();
     }
     let b = a.map(x => this.formatPain(x))
     if (level <= 0) {
       return '↓'.repeat(-level) + b.join('↓');
-    } else if (level >= a.length - 1) {
-      return '↑'.repeat(level - a.length + 1) + b.reverse().join('↑');
     } else {
-      return '↓'.repeat(a.length - 1 - level) + b.reverse().join('↑');
+      return '↑'.repeat(level - a.length + 1) + b.reverse().join('↑');
     }
   }
 }
