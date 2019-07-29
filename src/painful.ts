@@ -49,14 +49,23 @@ export class PainfulNotation extends Notation {
     }
     let numberValue = value.toNumber();
     let a = [];
-    for (let i = 0; i < 2; i++) {
-      a.push(this.formatPain(Math.floor(numberValue + 1e-9)));
+    for (let i = 0; i < 3; i++) {
+      a.push(Math.floor(numberValue + 1e-9));
       numberValue = Math.pow(1e5, numberValue - Math.floor(numberValue + 1e-9));
     }
+    if (a[1] >= 10) {
+      a.pop();
+    }
+    while (a.length > 1 && a[a.length - 1] === 1) {
+      a.pop();
+    }
+    let b = a.map(x => this.formatPain(x))
     if (level <= 0) {
-      return '↓'.repeat(-level) + a[0] + ((a[1] === '▲') ? '' : ('↓' + a[1]));
+      return '↓'.repeat(-level) + b.join('↓');
+    } else if (level >= a.length - 1) {
+      return '↑'.repeat(level - a.length + 1) + b.reverse().join('↑');
     } else {
-      return '↑'.repeat(level - 1) + ((a[1] === '▲') ? '' : a[1]) + '↑' + a[0];
+      return '↓'.repeat(a.length - 1 - level) + b.reverse().join('↑');
     }
   }
 }
