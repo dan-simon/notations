@@ -20,4 +20,5 @@ export * from "./prime";
 export * from "./bar";
 export * from "./shi";
 export * from "./painful";
+export * from "./tritetrated";
 export * from "./blind";

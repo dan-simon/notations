@@ -64,6 +64,7 @@ const displays = (function() {
     N.BarNotation,
     N.ShiNotation,
     N.PainfulNotation,
+    N.TritetratedNotation,
     N.BlindNotation
   ];
   return notations.reverse().map(n => new NotationDisplay(n));

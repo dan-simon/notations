@@ -1429,6 +1429,56 @@
     return PainfulNotation;
   }(Notation);
 
+  var TritetratedNotation = function (_super) {
+    __extends(TritetratedNotation, _super);
+
+    function TritetratedNotation() {
+      return _super !== null && _super.apply(this, arguments) || this;
+    }
+
+    Object.defineProperty(TritetratedNotation.prototype, "name", {
+      get: function get() {
+        return "Tritetrated";
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(TritetratedNotation.prototype, "infinite", {
+      get: function get() {
+        return 'Infinity';
+      },
+      enumerable: true,
+      configurable: true
+    });
+
+    TritetratedNotation.prototype.formatUnder1000 = function (value) {
+      return this.tritetrated(new Decimal(value));
+    };
+
+    TritetratedNotation.prototype.formatDecimal = function (value) {
+      return this.tritetrated(value);
+    };
+
+    TritetratedNotation.prototype.tritetrated = function (value) {
+      var low = 0;
+      var high = 16;
+
+      while (high - low > 1e-7) {
+        var mid = (low + high) / 2;
+
+        if (Decimal.pow(mid, Math.pow(mid, mid)).lt(value)) {
+          low = mid;
+        } else {
+          high = mid;
+        }
+      }
+
+      return low.toFixed(4) + '↑↑3';
+    };
+
+    return TritetratedNotation;
+  }(Notation);
+
   var BlindNotation = function (_super) {
     __extends(BlindNotation, _super);
 
@@ -1477,6 +1527,7 @@
   exports.Settings = Settings;
   exports.ShiNotation = ShiNotation;
   exports.StandardNotation = StandardNotation;
+  exports.TritetratedNotation = TritetratedNotation;
   exports.ZalgoNotation = ZalgoNotation;
 
   Object.defineProperty(exports, '__esModule', { value: true });
