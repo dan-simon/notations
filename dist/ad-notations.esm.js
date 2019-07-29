@@ -1298,6 +1298,7 @@ var ShiNotation = function (_super) {
 }(Notation);
 
 var COINS = '▲■⬟⬣✴';
+var PAINFUL_EPSILON = 1e-12;
 
 var PainfulNotation = function (_super) {
   __extends(PainfulNotation, _super);
@@ -1356,7 +1357,7 @@ var PainfulNotation = function (_super) {
 
     var level = 0;
 
-    while (value.lt(1)) {
+    while (value.lt(1 - PAINFUL_EPSILON)) {
       value = new Decimal(1e5 * value.toNumber());
       level -= 1;
     }
@@ -1366,12 +1367,14 @@ var PainfulNotation = function (_super) {
       level += 1;
     }
 
+    console.log(value);
     var numberValue = value.toNumber();
     var a = [];
 
     for (var i = 0; i < 2; i++) {
-      a.push(Math.floor(numberValue + 1e-9));
-      numberValue = 1e5 * (numberValue - Math.floor(numberValue + 1e-9));
+      numberValue += PAINFUL_EPSILON;
+      a.push(Math.floor(numberValue));
+      numberValue = 1e5 * (numberValue - Math.floor(numberValue));
     }
 
     if (a[1] === 0) {

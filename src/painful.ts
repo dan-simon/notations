@@ -4,6 +4,8 @@ import Decimal from "break_infinity.js/break_infinity";
 // Unicode has no seven-pointed star.
 const COINS = '▲■⬟⬣✴';
 
+const PAINFUL_EPSILON = 1e-12;
+
 export class PainfulNotation extends Notation {
   public get name(): string {
     return "Painful";
@@ -42,7 +44,7 @@ export class PainfulNotation extends Notation {
       return "0";
     }
     let level = 0;
-    while (value.lt(1)) {
+    while (value.lt(1 - PAINFUL_EPSILON)) {
       value = new Decimal(1e5 * value.toNumber());
       level -= 1;
     }
@@ -50,11 +52,13 @@ export class PainfulNotation extends Notation {
       value = new Decimal(value.log(1e5));
       level += 1;
     }
+    console.log(value);
     let numberValue = value.toNumber();
     let a = [];
     for (let i = 0; i < 2; i++) {
-      a.push(Math.floor(numberValue + 1e-9));
-      numberValue = 1e5 * (numberValue - Math.floor(numberValue + 1e-9));
+      numberValue += PAINFUL_EPSILON;
+      a.push(Math.floor(numberValue));
+      numberValue = 1e5 * (numberValue - Math.floor(numberValue));
     }
     if (a[1] === 0) {
       a.pop();
