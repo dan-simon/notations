@@ -19,4 +19,5 @@ export * from "./clock";
 export * from "./prime";
 export * from "./bar";
 export * from "./shi";
+export * from "./painful";
 export * from "./blind";

@@ -1331,6 +1331,87 @@
     return ShiNotation;
   }(Notation);
 
+  var COINS = '▲■⬟⬣✴';
+
+  var PainfulNotation = function (_super) {
+    __extends(PainfulNotation, _super);
+
+    function PainfulNotation() {
+      return _super !== null && _super.apply(this, arguments) || this;
+    }
+
+    Object.defineProperty(PainfulNotation.prototype, "name", {
+      get: function get() {
+        return "Painful";
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(PainfulNotation.prototype, "infinite", {
+      get: function get() {
+        return 'ω';
+      },
+      enumerable: true,
+      configurable: true
+    });
+
+    PainfulNotation.prototype.formatUnder1000 = function (value) {
+      return this.formatAnyNumber(new Decimal(value));
+    };
+
+    PainfulNotation.prototype.formatDecimal = function (value) {
+      return this.formatAnyNumber(value);
+    };
+
+    PainfulNotation.prototype.formatPain = function (value) {
+      return [4, 3, 2, 1, 0].map(function (i) {
+        var digit = Math.floor(value / Math.pow(10, i)) % 10;
+
+        if (digit === 0) {
+          return '';
+        } else if (digit === 1) {
+          return COINS[i];
+        } else {
+          return digit + COINS[i];
+        }
+      }).join('');
+    };
+
+    PainfulNotation.prototype.formatAnyNumber = function (value) {
+      if (value.lt(0)) {
+        return "-" + this.formatAnyNumber(value.negate());
+      }
+
+      var level = 0;
+
+      if (value.lt(1)) {
+        value = Decimal.pow(1e5, value.toNumber());
+        level -= 1;
+      }
+
+      while (value.gte(1e5)) {
+        value = new Decimal(value.log(1e5));
+        level += 1;
+      }
+
+      var numberValue = value.toNumber();
+      var a = [];
+
+      for (var i = 0; i < 2; i++) {
+        a.push(this.formatPain(Math.floor(numberValue + 1e-9)));
+        numberValue = Math.pow(1e5, numberValue - Math.floor(numberValue + 1e-9));
+      }
+
+      if (level <= 0) {
+        return '↓'.repeat(-level) + a[0] + (a[1] === '▲' ? '' : '↓' + a[1]);
+      } else {
+        return '↑'.repeat(level - 1) + (a[1] === '▲' ? '' : a[1]) + '↑' + a[0];
+      }
+    };
+
+    return PainfulNotation;
+  }(Notation);
+
   var BlindNotation = function (_super) {
     __extends(BlindNotation, _super);
 
@@ -1372,6 +1453,7 @@
   exports.MixedEngineeringNotation = MixedEngineeringNotation;
   exports.MixedScientificNotation = MixedScientificNotation;
   exports.Notation = Notation;
+  exports.PainfulNotation = PainfulNotation;
   exports.PrimeNotation = PrimeNotation;
   exports.RomanNotation = RomanNotation;
   exports.ScientificNotation = ScientificNotation;

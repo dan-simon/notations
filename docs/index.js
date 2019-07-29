@@ -63,6 +63,7 @@ const displays = (function() {
     N.PrimeNotation,
     N.BarNotation,
     N.ShiNotation,
+    N.PainfulNotation,
     N.BlindNotation
   ];
   return notations.reverse().map(n => new NotationDisplay(n));
